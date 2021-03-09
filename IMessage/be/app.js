@@ -3,6 +3,7 @@ const http = require('http')
 const express = require('express')
 const socketIO = require('socket.io')
 const app = express()
+const onHandler = require('./handler')
 
 app.all('*', function(req, res, next) {
   //设为指定的域
@@ -30,20 +31,12 @@ app.get('/socket', (req,res) => {
 
 io.on('connection', socket => {
   
+  /**
+   * 当连接上时，发送欢迎语
+   */
 
-  socket.emit('message', 'welcome to Lokep`s')
-
-  socket.on('/message', socket => {
-    console.log(socket)
-  })
-
-  socket.on('sendMsg', (data) => {
-    console.log(data)
-    //给所有用户发送
-      sockets.emit('setId', {id: '1234567'})
-      //给当前用户发送
-      //socket.emit('setId', { id: '123456' })
-  })
+  console.log('有一台设备连接上了')
+  socket.emit('login', 'welcome to Lokep`s')
 
   /**
   * 当用户连接上时，获取生成的socket对象，并且获取对象的auth或query字段，讲对应字段存入数据库中
@@ -58,8 +51,7 @@ io.on('connection', socket => {
   * 
   * 可以拆分文件进行管理，例如 onHandler(socket)
   */
-
-
+  onHandler(socket, io)
 
   /**
   * 包括对应需要向客户端发送的事件
