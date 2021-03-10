@@ -33,12 +33,22 @@ module.exports = (socket, io) => {
   socket.on('message', socketDTO => {
     //todo 将接收到的信息先进行持久化
     // 转发给用户
-    for (let [key, value] of io.sockets.sockets) {
-      if (value.handshake.query.reciever == 'hln') {
-        value.emit('transport', socketDTO)
+    // for (let [key, value] of io.sockets.sockets) {
+    //   console.log(io.sockets.sockets.size)
+    //   console.log('"'+value.handshake.query.name+'"', socketDTO.to.name)
+    //   if ('"'+value.handshake.query.name+'"' == socketDTO.to.name) {
+    //     value.emit('transport', socketDTO)
+    //   }
+    //   break
+    // }
+
+    const socketCollection = io.sockets.sockets
+    socketCollection.forEach(item => {
+      console.log('"'+item.handshake.query.name + '"', socketDTO.to.name)
+      if ('"'+item.handshake.query.name+'"' == socketDTO.to.name) {
+        item.emit('transport', socketDTO)
       }
-      break
-    }
+    })
   })
 
   /**
