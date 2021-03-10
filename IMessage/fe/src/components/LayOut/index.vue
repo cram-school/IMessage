@@ -4,7 +4,7 @@
 <template>
   <NavBar
     v-if="navBar"
-    title="标题"
+    :title="title"
     left-text="返回"
     right-text="按钮"
     left-arrow
@@ -14,13 +14,15 @@
   <router-view />
 </template>
 <script lang="ts">
-import { reactive, toRefs } from '@vue/reactivity'
+import { reactive, ref, toRefs } from '@vue/reactivity'
 
 import { NavBar } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted } from '@vue/runtime-core'
+import { computed, defineComponent, onMounted, watchEffect } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 
-export default {
+export default defineComponent({
+  
   components: {
     NavBar
   },
@@ -28,6 +30,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const { navbar = true } = route.meta
+    const store = useStore()
     const state = reactive({
       navBar: navbar,
     })
@@ -41,16 +44,20 @@ export default {
     }
     const clickRight = () => {/** */}
 
+
     onMounted(() => {
       /** */
-      // state.navBar = route.meta.navbar
+      
     })
 
+    const title = computed(() => store.state.title)
+    console.log(store)
     return {
       ...toRefs(state),
+      title,
       clickLeft,
       clickRight
     }
   }
-}
+})
 </script>
